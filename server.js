@@ -3,8 +3,8 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
-var cors = require("cors");
 const app = express();
+var cors = require("cors");
 app.use(
   cors({
     origin: "*",

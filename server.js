@@ -2,6 +2,7 @@
 const path = require("path");
 const express = require("express");
 var cors = require("cors");
+const PORT = process.env.PORT || 5000;
 const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
 const app = express();
@@ -31,7 +32,8 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 connectDB();
-app.get("/", (req, res) => res.send("hello world"));
+
+app.get("/", (req, res) =>{ res.send("hello world")});
 app.use("/user", require("./routes/user"));
 app.use("/password", require("./routes/password"));
 
@@ -41,7 +43,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-const PORT = process.env.PORT || 5000;
-y
+
+
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { sendEmailWithNodemailer } = require("../helpers/email");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 require("dotenv").config();
 const config = require("config");

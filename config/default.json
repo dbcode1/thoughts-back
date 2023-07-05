@@ -1,0 +1,4 @@
+{
+  "JWT_SECRET": "funtimes",
+  "DATABASE_URI": "mongodb+srv://dmbrusky:startingNew1@thoughts.yvxuu5w.mongodb.net/?retryWrites=true&w=majority"
+}

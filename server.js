@@ -4,7 +4,8 @@ const express = require("express");
 var cors = require("cors");
 const PORT = process.env.PORT || 5000;
 const bodyParser = require("body-parser");
-const connectDB = require("./config/db");
+require("dotenv").config();
+// const connectDB = require("./config/db");
 const app = express();
 
 app.use(
@@ -31,7 +32,13 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-connectDB();
+mongoose.connect(
+  process.env.DATABASE_URI,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  () => {
+    console.log("Connected to MongoDB");
+  }
+);
 
 app.get("/", (req, res) =>{ res.send("hello world")});
 app.use("/user", require("./routes/user"));

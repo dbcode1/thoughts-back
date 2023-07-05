@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
 const app = express();
 
-
 app.use(
   cors({
     origin: "*",
@@ -14,23 +13,25 @@ app.use(
 );
 
 //solving cors issue
-app.use((req, res, next)=>{
-    res.header("Access-Control-Allow-Origin", "*")
-    // res.header("Access-Control-Allow-Credentials: true") 
-    res.header("Access-Control-Allow-Headers", 
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization")
-    // res.header("Access-Control-Max-Age", "1000")
-    if (req.method == "OPTIONS"){
-        res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET")
-        return res.status(200).json({})
-    }
-    next()
-})
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  // res.header("Access-Control-Allow-Credentials: true")
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  // res.header("Access-Control-Max-Age", "1000")
+  if (req.method == "OPTIONS") {
+    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+    return res.status(200).json({});
+  }
+  next();
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 connectDB();
-
+app.get("/", (req, res) => res.send("hello world"));
 app.use("/user", require("./routes/user"));
 app.use("/password", require("./routes/password"));
 

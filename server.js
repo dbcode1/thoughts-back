@@ -3,8 +3,13 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
-var cors = require('cors')
+var cors = require("cors");
 const app = express();
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json({ extended: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -13,7 +18,6 @@ process.env.DEBUG = true;
 connectDB();
 console.log("url", process.env.DATABASE_URL);
 
-app.use(cors())
 app.use("/user", require("./routes/user"));
 app.use("/password", require("./routes/password"));
 //app.use("/user/thoughts")

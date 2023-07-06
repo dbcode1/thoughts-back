@@ -61,9 +61,5 @@ const connectDB = async () => {
 };
 
 connectDB()
-  .then(() => {
     app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-  })
-  .catch((e) => {
-    console.log(e);
-  });
+

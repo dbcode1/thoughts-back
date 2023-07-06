@@ -5,8 +5,7 @@ var cors = require("cors");
 const PORT = process.env.PORT || 5000;
 const bodyParser = require("body-parser");
 require("dotenv").config();
-const mongoose = require('mongoose')
-// const connectDB = require("./config/db");
+const mongoose = require("mongoose");
 const app = express();
 
 app.use(
@@ -33,15 +32,10 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-mongoose.connect(
-  process.env.DATABASE_URI,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  () => {
-    console.log("Connected to MongoDB");
-  }
-);
 
-app.get("/", (req, res) =>{ res.send("hello world")});
+app.get("/", (req, res) => {
+  res.send("hello world");
+});
 app.use("/user", require("./routes/user"));
 app.use("/password", require("./routes/password"));
 
@@ -51,7 +45,25 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DATABASE_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
+    console.log("MongoDB Connected...");
+  } catch (err) {
+    console.error(err.message);
+    // Exit process with failure
+    process.exit(1);
+  }
+};
 
-
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+  })
+  .catch((e) => {
+    console.log(e);
+  });

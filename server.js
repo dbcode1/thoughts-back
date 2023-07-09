@@ -14,6 +14,16 @@ app.use(
   })
 );
 
+mongoose
+  .connect(
+    process.env.DATABASE_URI,
+    { useNewUrlParser: true, useUnifiedTopology: true },
+    () => {
+      console.log("Connected to DB!");
+    }
+  )
+
+
 //solving cors issue
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -45,11 +55,4 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-mongoose.connect(
-  process.env.DATABASE_URI,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  () => {
-    console.log("Connected to DB!");
-  }
-);
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

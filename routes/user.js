@@ -15,40 +15,44 @@ const { reset } = require("nodemon");
 // register
 
 router.post("/", async (req, res) => {
-  const { name, email, password } = req.body;
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt);
-  
-  let user = await User.findOne({ email });
-  console.log("USER", user)
-  if(user) {
-    //console.log("user exists")
-    return res.status(400).send('User already exists');
-  }
-
-  user = new User({
-    name,
-    email,
-    password: hash
-  });
-  console.log("user created", user)
-  await user.save();
-  
-  const payload = {
-    user: {
-      id: user.id,
-    },
-  };
-  jwt.sign(
-    payload,
-    config.get("JWT_SECRET"),
-    { expiresIn: "2 days" },
-    (err, token) => {
-      if (err) throw err;
-      res.json({ token });
+  try {
+    const { name, email, password } = req.body;
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+    
+    let user = await User.findOne({ email });
+    console.log("USER", user)
+    if(user) {
+      //console.log("user exists")
+      return res.status(400).send('User already exists');
     }
-  );
-});
+
+    user = new User({
+      name,
+      email,
+      password: hash
+    });
+    console.log("user created", user)
+    await user.save();
+    
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+    jwt.sign(
+      payload,
+      config.get("JWT_SECRET"),
+      { expiresIn: "2 days" },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    )
+    }catch(err) {
+      console.log(err)
+    }
+})
 
 
 // login user

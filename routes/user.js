@@ -9,7 +9,6 @@ const auth = require('../auth/auth');
 const User = require("../models/User.js");
 const Card = require("../models/Card.js")
 const { Console } = require("console");
-const { reset } = require("nodemon");
 
 
 // register

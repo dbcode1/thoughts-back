@@ -171,7 +171,13 @@ router.post('/delete', auth, async (req, res) => {
 
 
 // login with google
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, 'postmessage',)
+
+router.post('/google-token', async (req, res) => {
+  const { tokens } = await client.getToken(req.body.tokenResponse)
+  console.log("GOOGLE TOkens", tokens)
+  res.json(tokens)
+})
 
 router.post('/google', async (req, res) => {
   const { idToken } = req.body;

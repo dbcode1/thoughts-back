@@ -12,7 +12,7 @@ router.post("/forgot", async (req, res) => {
   const { email } = req.body;
 
   const user = User.findOne({ email: email });
-  console.log(email);
+
   //return res.json({ message: "working" });
   if (!user) {
     return res.json({ message: "No user with that email." });
@@ -23,7 +23,9 @@ router.post("/forgot", async (req, res) => {
       id: user.id,
     },
   };
+
   let key;
+
   jwt.sign(
     payload,
     config.get("JWT_SECRET"),

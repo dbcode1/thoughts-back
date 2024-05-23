@@ -125,13 +125,19 @@ router.post("/remove", auth, async (req, res) => {
 //add thought 
 router.post("/entries",  auth, async(req, res)=> {
   try {
+    
     const {thought, token} = req.body
+    
     let card = new Card({
       text: thought,
-      user: req.user.id
+      user: req.user.id,
     })
-    res.json({"message": "Card Added", status: 200})
+    console.log(card)
     await card.save()
+    
+    const entries = await Card.find({ user: req.user.id}) 
+    res.status(200).json(entries)
+    
   } catch(err) {
     console.log(err.response) 
   }
@@ -156,17 +162,9 @@ router.post("/entries/user", auth,  async (req, res) => {
 
 // delete thought
 router.post('/delete', auth, async (req, res) => {
-  const {token, title} = req.body
-  console.log("delete title", title)
-  try {
-    const card = await Card.findOne({text: title})
-    card.remove()
-    console.log(card)
+    const id = req.body.id
+    const card = await Card.deleteOne({_id: id})
     res.json({"message": "Card deleted"})
-  
-  }catch (error) {
-    res.status(500).json({"message": "Didnt delete"});
-  }
 })
 
 

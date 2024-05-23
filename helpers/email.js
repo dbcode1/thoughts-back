@@ -1,5 +1,6 @@
 // /helpers/email.js
 const nodeMailer = require("nodemailer");
+const config = require("config");
 
 exports.sendEmailWithNodemailer = (req, res, emailData) => {
   const transporter = nodeMailer.createTransport({
@@ -9,13 +10,13 @@ exports.sendEmailWithNodemailer = (req, res, emailData) => {
     requireTLS: true,
     auth: {
       user: "dmbrusky@gmail.com",
-      pass: "uuojqgiykktnkrwq",
+      pass:  config.get("GOOGLE_RESET"),
     },
     tls: {
       ciphers: "SSLv3",
     },
   });
-  console.log("verification");
+
   return transporter
     .sendMail(emailData)
     .then((info) => {

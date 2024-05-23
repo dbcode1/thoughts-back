@@ -1,4 +1,5 @@
 {
   "JWT_SECRET": "funtimes",
-  "DATABASE_URI": "mongodb+srv://dmbrusky:startingNew1@thoughts.yvxuu5w.mongodb.net/?retryWrites=true&w=majority"
+  "DATABASE_URI": "mongodb+srv://dmbrusky:startingNew1@thoughts.yvxuu5w.mongodb.net/?retryWrites=true&w=majority",
+  "GOOGLE_RESET": "exgm htjb bomu mbxj"
 }

@@ -7,6 +7,7 @@ module.exports = function (req, res, next) {
   }
 
   const { token } = req.body;
+  console.log("token", token)
   try {
     jwt.verify(token, config.get("JWT_SECRET"), (error, decoded) => {
       if (error) {

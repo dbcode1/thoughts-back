@@ -64,6 +64,7 @@ router.post('/login', async (req, res) => {
 	
 	try {
     let user = await User.findOne({ email });
+    console.log(user)
 		if(!user) {
 			return res.status(400).send('No user with that name');
     }
@@ -161,8 +162,10 @@ router.post("/entries/user", auth,  async (req, res) => {
 
 
 // delete thought
-router.post('/delete', auth, async (req, res) => {
+router.post("/delete", auth, async (req, res) => {
+    console.log("delete thought")
     const id = req.body.id
+    console.log(id)
     const card = await Card.deleteOne({_id: id})
     res.json({"message": "Card deleted"})
 })

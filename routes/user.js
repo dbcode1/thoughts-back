@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const config = require("config");
+require("dotenv").config();
 const {OAuth2Client} = require('google-auth-library')
 const secret = config.get("JWT_SECRET")
 const auth = require('../auth/auth');
@@ -14,6 +15,7 @@ const { Console } = require("console");
 // register
 
 router.post("/", async (req, res) => {
+  console.log("Register")
   try {
     const { name, email, password } = req.body;
     const salt = bcrypt.genSaltSync(10);
@@ -41,7 +43,7 @@ router.post("/", async (req, res) => {
     };
     jwt.sign(
       payload,
-      config.get("JWT_SECRET"),
+      process.env.JWT_SECRET,
       { expiresIn: "2 days" },
       (err, token) => {
         if (err) throw err;
@@ -86,7 +88,7 @@ router.post('/login', async (req, res) => {
     
 		jwt.sign(
 			payload,
-			config.get('JWT_SECRET'),
+			process.env.JWT_SECRET,
 			{ expiresIn: 360000 },
 			(err, token) => {
         

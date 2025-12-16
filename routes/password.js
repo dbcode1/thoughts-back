@@ -71,7 +71,7 @@ router.put("/reset", async (req, res) => {
   if (resetPasswordLink) {
     jwt.verify(
       resetPasswordLink,
-      config.get("JWT_SECRET"),
+      process.env.JWT_SECRET,
       function (err, decoded) {
         if (err) {
           return res.status(400).json({

@@ -1,8 +1,11 @@
 // /helpers/email.js
 const nodeMailer = require("nodemailer");
 const config = require("config");
+require("dotenv").config();
+
 
 exports.sendEmailWithNodemailer = (req, res, emailData) => {
+  console.log("nodemailer")
   const transporter = nodeMailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -10,7 +13,7 @@ exports.sendEmailWithNodemailer = (req, res, emailData) => {
     requireTLS: true,
     auth: {
       user: "dmbrusky@gmail.com",
-      pass:  config.get("GOOGLE_RESET"),
+      pass:  process.env.GOOGLE_RESET,
     },
     tls: {
       ciphers: "SSLv3",

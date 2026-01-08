@@ -4,8 +4,6 @@ const { sendEmailWithNodemailer } = require("../helpers/email");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const _ = require("lodash");
-require("dotenv").config();
-const config = require("config");
 const User = require("../models/User");
 
 router.post("/forgot", async (req, res) => {
@@ -28,7 +26,7 @@ router.post("/forgot", async (req, res) => {
 
   jwt.sign(
     payload,
-    config.get("JWT_SECRET"),
+    process.env.JWT_SECRET,
     { expiresIn: "2 days" },
     (err, token) => {
       if (err) throw err;

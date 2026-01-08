@@ -1,8 +1,5 @@
 // /helpers/email.js
 const nodeMailer = require("nodemailer");
-const config = require("config");
-require("dotenv").config();
-
 
 exports.sendEmailWithNodemailer = (req, res, emailData) => {
   console.log("nodemailer")

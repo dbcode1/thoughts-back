@@ -161,7 +161,7 @@ router.post("/entries/user", auth,  async (req, res) => {
 
 
 // delete thought
-router.post("/delete", auth, async (req, res) => {
+router.post("/delete", async (req, res) => {
     console.log("delete thought")
     const id = req.body.id
     console.log(id)

@@ -2,10 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const config = require("config");
-require("dotenv").config();
 const {OAuth2Client} = require('google-auth-library')
-const secret = config.get("JWT_SECRET")
 const auth = require('../auth/auth');
 const User = require("../models/User.js");
 const Card = require("../models/Card.js")

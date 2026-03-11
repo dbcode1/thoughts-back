@@ -25,7 +25,6 @@ router.post("/forgot", async (req, res) => {
 
   let key;
 
-  console.log("generate tokens");
   const emailToken = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: "15 min",
   });
@@ -39,7 +38,7 @@ router.post("/forgot", async (req, res) => {
     }
   });
   const { data, error } = await resend.emails.send({
-    from: "dan@thoughtpad.org",
+    from: "danb1@danielbrusky.com",
     to: email,
     subject: "Reset your password",
     html: `
@@ -50,8 +49,9 @@ router.post("/forgot", async (req, res) => {
 
                   `,
   });
+  console.log("DAATA", data);
   return res.json({
-    message: "Check your email for reset instructions"
+    message: "Check your email for reset instructions",
   });
 });
 
@@ -101,7 +101,7 @@ router.put("/reset", async (req, res) => {
             });
           });
         });
-      }
+      },
     );
   }
 });

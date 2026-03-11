@@ -4,36 +4,63 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 const User = require("../models/User");
-const FormData = require("form-data"); // form-data v4.0.1
-const Mailgun = require("mailgun.js");
+const { Resend } = require("resend");
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 router.post("/forgot", async (req, res) => {
   const { email } = req.body;
+  const user = User.findOne({ email: email });
 
-  const mailgun = new Mailgun(FormData);
-  const mg = mailgun.client({
-    username: "api",
-    key: process.env.MAILGUN_API_KEY,
-    // When you have an EU-domain, you must specify the endpoint:
-    // url: "https://api.eu.mailgun.net"
-  });
-  try {
-    const data = await mg.messages.create("thoughtpad.org", {
-      from: "dmbrusky@gmail.com",
-      to: "dmbrusky@gmail.com",
-      subject: "Hello DANIEL BRUSKY",
-      text: "Congratulations, you just sent an email with Mailgun! You are truly awesome!",
-    });
-
-    console.log("data", data); // logs response data
-  } catch (error) {
-    console.log(error); //logs any error
+  //return res.json({ message: "working" });
+  if (!user) {
+    return res.json({ message: "No user with that email." });
   }
+
+  const payload = {
+    user: {
+      id: user.id,
+    },
+  };
+
+  let key;
+
+  console.log("generate tokens");
+  const emailToken = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: "15 min",
+  });
+
+  user.updateOne({ resetPasswordLink: emailToken }, (err, success) => {
+    if (err) {
+      console.log("Reset Password Link Error", err);
+      return res.status(400).json({
+        error: "Database connection error on user password forgot request",
+      });
+    }
+  });
+  const { data, error } = await resend.emails.send({
+    from: "dan@thoughtpad.org",
+    to: email,
+    subject: "Reset your password",
+    html: `
+                      <h1>Please use the following link to reset your password</h1>
+                      <a href="${process.env.CLIENT_URL}/reset/${emailToken}">RESET</a>
+                      <hr />
+                      <p>This email may contain sensitive information</p>
+
+                  `,
+  });
+  return res.json({
+    message: "Check your email for reset instructions"
+  });
 });
 
 router.put("/reset", async (req, res) => {
   console.log("Reset Password");
+
   const { resetPasswordLink, newPassword } = req.body;
+
+  console.log(resetPasswordLink);
 
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(newPassword, salt);
@@ -48,7 +75,9 @@ router.put("/reset", async (req, res) => {
             error: "Expired link. Try again. ",
           });
         }
+
         User.findOne({ resetPasswordLink }, (err, user) => {
+          console.log("user", user);
           if (err || !user) {
             return res.status(400).json({
               error: "Something went wrong. Try later",

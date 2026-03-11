@@ -17,9 +17,8 @@ router.post("/", async (req, res) => {
     const { name, email, password } = req.body;
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
-    
     let user = await User.findOne({ email });
-    console.log("USER", user)
+    //console.log("USER", user)
     if(user) {
       //console.log("user exists")
       return res.status(400).send('User already exists');
@@ -127,6 +126,7 @@ router.post("/entries",  auth, async(req, res)=> {
   try {
     
     const {thought, token} = req.body
+    console.log(token)
     
     let card = new Card({
       text: thought,
@@ -171,10 +171,14 @@ router.post("/delete", async (req, res) => {
 
 
 // login with google
+// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, 'postmessage',)
+// console.log(client)
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, 'postmessage',)
 console.log(client)
 
 router.post('/google-token', async (req, res) => {
+  
+  console.log("GET GOOGLE TOKEN")
   const { tokens } = await client.getToken(req.body.tokenResponse)
   console.log("GOOGLE TOkens", tokens)
   res.json(tokens)
@@ -188,7 +192,7 @@ router.post('/google', async (req, res) => {
     if(email_verified){
       User.findOne({ email }).exec((err, user) => {
         if (user) { 
-          const token = jwt.sign({ user:{ id: user.id }}, process.env.JWT_SECRET, { expiresIn: '7d' });
+          const token = jwt.sign({ user:{ id: user.id }}, process.env.JWT_SECRET, { expiresIn: '15min' });
           const { _id, email, name} = user;
           return res.json({
             token,
@@ -205,7 +209,7 @@ router.post('/google', async (req, res) => {
                     error: 'User signup failed with google'
                 });
             }
-            const token = jwt.sign({ user:{ id: data.id }}, process.env.JWT_SECRET, { expiresIn: '7d' });
+            const token = jwt.sign({ user:{ id: data.id }}, process.env.JWT_SECRET, { expiresIn: '1hr' });
             const { _id, email, name } = data;
             return res.json({
                 token,

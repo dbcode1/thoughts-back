@@ -13,18 +13,16 @@ mongoose.set("debug", true);
 mongoose.set("bufferCommands", false);
 (async () => {
   try {
-    await mongoose
-      .connect(
-        process.env.DATABASE_URI,
-        {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        },
-        () => {
-          console.log("Connected!");
-        },
-      )
-      .asPromise();
+    await mongoose.connect(
+      process.env.DATABASE_URI,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+      () => {
+        console.log("Connected!");
+      },
+    );
   } catch (err) {
     console.log(err);
   }
@@ -47,6 +45,13 @@ if (mongoose.connection.readyState === 1) {
       mongoose.connection.readyState,
   );
 }
+
+app.use(
+  cors({
+    origin: "https://thoughtpad.org",
+    credentials: true,
+  }),
+);
 
 //solving cors issue
 app.use((req, res, next) => {
@@ -71,7 +76,7 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 app.use("/user", require("./routes/user"));
-app.use("/password", require("./routes/password.js"));
+app.use("/password", require("./routes/password"));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === "production") {
